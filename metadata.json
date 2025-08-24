@@ -1,0 +1,5 @@
+{
+  "name": "Conversational Survey App",
+  "description": "An elegant, single-page conversational survey application inspired by Tally.so and Typeform, designed to collect and analyze user feedback efficiently. It features a one-question-at-a-time flow, a clean and minimal UI, and a data visualization dashboard for analyzing submissions.",
+  "requestFramePermissions": []
+}
