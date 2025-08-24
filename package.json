@@ -4,7 +4,8 @@
   "description": "An elegant, single-page conversational survey application.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"No tests configured yet, but CI pipeline is working.\" && exit 0"
+    "test": "echo \"No tests configured yet, but CI pipeline is working.\" && exit 0",
+    "dev": "vite"
   },
   "keywords": [
     "react",
@@ -24,6 +25,7 @@
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vite": "^7.1.3"
   }
 }
