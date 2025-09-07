@@ -1,30 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+
+<head>
+  <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <title>Conversational Survey App</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Accessible viewport: allow user scaling -->
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Conversational Survey App</title>
+  <meta name="theme-color" content="#ffffff" />
+  <meta http-equiv="x-dns-prefetch-control" content="on" />
+  <meta name="color-scheme" content="light" />
+  <meta name="description" content="Interactive conversational survey" />
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://annyuowenmyfuvaavhmd.supabase.co" crossorigin />
+  <link rel="dns-prefetch" href="//annyuowenmyfuvaavhmd.supabase.co" />
+  <!-- Font: load non-blocking with display swap. Could be conditionally loaded later via JS if desired. -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"
+    media="print" onload="this.media='all'" />
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </noscript>
+  <!-- Import map (dev only) -->
   <script type="importmap">
-{
-  "imports": {
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.8.2",
-    "react/": "https://esm.sh/react@^19.1.1/",
-    "react": "https://esm.sh/react@^19.1.1",
-    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
-    "recharts": "https://esm.sh/recharts@^3.1.2",
-    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.45.0",
-    "path": "https://esm.sh/path@^0.12.7",
-    "vite": "https://esm.sh/vite@^7.1.3"
+  {
+    "imports": {
+      "react-router-dom": "https://esm.sh/react-router-dom@^7.8.2",
+      "react/": "https://esm.sh/react@^19.1.1/",
+      "react": "https://esm.sh/react@^19.1.1",
+      "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+      "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.45.0",
+      "path": "https://esm.sh/path@^0.12.7",
+      "vite": "https://esm.sh/vite@^7.1.3"
+    }
   }
-}
-</script>
+  </script>
 </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
 </html>

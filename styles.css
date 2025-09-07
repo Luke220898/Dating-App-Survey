@@ -4,7 +4,7 @@
 /* Design tokens (@theme) — must come AFTER the import in v4 so the plugin can merge them */
 @theme {
   /* Fonts */
-  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Poppins";
 
   /* Original brand colors (matched to previous tailwind.config.js) */
   --color-primary: #2c3e50;
@@ -40,3 +40,339 @@ a {
 
 /* Note: Keep @apply usage minimal (only tokens/utilities confirmed generated). 
   For layout spacing resets use plain CSS to avoid unknown utility errors in v4 JIT. */
+
+/* --- Responsive Enhancements --- */
+
+/* Fluid typography utilities */
+.text-fluid-title {
+  font-size: clamp(1.75rem, 1.1rem + 2.2vw, 2.5rem);
+  line-height: 1.15;
+}
+
+.text-fluid-question {
+  font-size: clamp(1.35rem, 1rem + 1.2vw, 2rem);
+  line-height: 1.2;
+}
+
+.text-fluid-body {
+  font-size: clamp(0.95rem, 0.85rem + 0.4vw, 1.1rem);
+}
+
+/* Container that adapts width without causing horizontal scroll */
+.content-container {
+  width: 100%;
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-inline: clamp(0.75rem, 3vw, 1.5rem);
+}
+
+/* Use dynamic viewport height to reduce mobile browser chrome jumps */
+:root {
+  --dvh: 100dvh;
+}
+
+.min-h-dvh {
+  min-height: var(--dvh);
+}
+
+/* Sticky action bar for navigation on small screens */
+@media (max-width: 640px) {
+  .survey-actions-sticky {
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(to top, var(--color-background) 80%, rgba(247, 249, 250, 0));
+    padding-top: 0.5rem;
+  }
+}
+
+/* Reduce vertical gaps on very small heights */
+@media (max-height: 620px) {
+  .compact-vertical-space :where(h1, h2, h3) {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .compact-vertical-space .question-block {
+    margin-bottom: 1rem !important;
+  }
+}
+
+/* Smooth transitions for layout adjustments */
+.layout-transition {
+  transition: padding 150ms ease, margin 150ms ease;
+}
+
+/* Utility to hide scrollbars where we intentionally avoid scroll yet allow overscroll-y for momentum */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Survey desktop grid: main content + side panel */
+@media (min-width: 1024px) {
+
+  /* lg */
+  .survey-grid-desktop {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 15rem;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .survey-side {
+    position: sticky;
+    top: 5.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+/* Fluid welcome / thank you headings */
+.text-fluid-hero {
+  font-size: clamp(2rem, 1.3rem + 3vw, 3.25rem);
+  line-height: 1.08;
+}
+
+/* Fine-grained responsive spacing tweaks */
+@media (min-width:640px) and (max-width:1023px) {
+
+  /* tablet */
+  .tablet-mx-narrow {
+    max-width: 44rem;
+  }
+}
+
+/* -------------------------------------
+   Interactive option blocks (Radio / Checkbox)
+   ------------------------------------- */
+.interactive-option {
+  @apply flex items-center p-4 sm:p-5 bg-white rounded-xl cursor-pointer border border-gray-300 hover:border-primary transition gap-3 select-none;
+  min-height: 3.5rem;
+}
+
+@media (max-width: 639px) {
+  .interactive-option {
+    padding: 0.9rem 1rem;
+    border-radius: 0.9rem;
+  }
+}
+
+.interactive-option.is-active {
+  @apply border-2 border-primary shadow-sm;
+}
+
+/* Ranking item refinement */
+.ranking-item {
+  @apply flex-grow border rounded-xl bg-white shadow-sm transition relative;
+}
+
+.ranking-item.drag-active {
+  @apply bg-gray-200 border-primary shadow-inner scale-[0.99] cursor-grabbing;
+}
+
+.ranking-item:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Autocomplete dropdown refinement */
+.autocomplete-list {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-lightgray) transparent;
+}
+
+.autocomplete-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.autocomplete-list::-webkit-scrollbar-thumb {
+  background: var(--color-lightgray);
+  border-radius: 10px;
+}
+
+/* Micro spacing adjustments on very small width */
+@media (max-width: 390px) {
+  .question-block h2 {
+    margin-bottom: 1.1rem !important;
+  }
+}
+
+/* Reduce layout shift on short heights */
+@media (max-height: 620px) {
+  .interactive-option {
+    min-height: 3.1rem;
+  }
+}
+
+/* Smooth fade for dynamic blocks (Other input, suggestions) */
+.fade-in {
+  animation: fadeIn 140ms ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Question transition */
+.animate-fade-slide {
+  animation: fadeSlide 260ms cubic-bezier(.4, .12, .2, 1);
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Horizontal tabs scroll helpers */
+.tabs-scroll {
+  scroll-snap-type: x proximity;
+}
+
+.tabs-scroll>* {
+  scroll-snap-align: start;
+}
+
+.tabs-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tabs-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabs-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-lightgray);
+  border-radius: 4px;
+}
+
+/* Tab button underline indicator */
+.tab-btn {
+  position: relative;
+}
+
+.tab-btn:after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 2px;
+  background: transparent;
+  transition: all .25s cubic-bezier(.4, .12, .2, 1);
+}
+
+.tab-btn[aria-current="true"]:after {
+  background: var(--color-primary);
+  left: 8%;
+  right: 8%;
+  height: 3px;
+}
+
+/* Dashboard title tighter mobile clamp */
+.dashboard-title {
+  font-size: clamp(1.6rem, 1.25rem + 2.2vw, 2.5rem);
+  line-height: 1.12;
+}
+
+/* Tabs gradient wrapper (visual scroll hint) */
+.tabs-gradient-wrapper {
+  position: relative;
+}
+
+.tabs-gradient-wrapper:before,
+.tabs-gradient-wrapper:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2.2rem;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.tabs-gradient-wrapper:before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-background), rgba(247, 249, 250, 0));
+}
+
+.tabs-gradient-wrapper:after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-background), rgba(247, 249, 250, 0));
+}
+
+/* Sticky dashboard header */
+.dashboard-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(8px);
+  background: rgba(247, 249, 250, 0.9);
+  border-bottom: 1px solid var(--color-gray-200);
+  margin-bottom: 2rem;
+}
+
+.dashboard-sticky-header[data-scrolled="true"] {
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+  background: rgba(247, 249, 250, 0.85);
+}
+
+.dashboard-sticky-header[data-scrolled="true"] .dashboard-title {
+  font-size: clamp(1.35rem, 1rem + 1.5vw, 2.1rem);
+  transition: font-size 160ms ease;
+}
+
+/* Dashboard card styles */
+.kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 0.85rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.kpi-card-strong {
+  background: #ffffff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 0.95rem;
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.kpi-grid-tight {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+/* Content visibility performance helpers */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 600px 400px;
+}
+
+.cv-chart {
+  content-visibility: auto;
+  contain-intrinsic-size: 400px 260px;
+}
+
+.cv-table {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px 480px;
+}

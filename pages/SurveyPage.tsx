@@ -36,6 +36,7 @@ const SurveyPage: React.FC<SurveyPageProps> = ({ questions, answers, setAnswers,
   const [emailError, setEmailError] = useState<string | null>(null);
   const [startTime, setStartTime] = useState<number | null>(null);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [navTransitioning, setNavTransitioning] = useState(false);
 
   // Restore persisted submission data (handles HMR / refresh mid-survey)
   useEffect(() => {
@@ -250,7 +251,16 @@ const SurveyPage: React.FC<SurveyPageProps> = ({ questions, answers, setAnswers,
     if (isAnswerValid()) {
       const currentVisibleIndex = visibleQuestions.findIndex(q => q.id === currentQuestion.id);
       if (currentVisibleIndex < visibleQuestions.length - 1) {
-        setCurrentQuestionIndex(currentVisibleIndex + 1);
+        setNavTransitioning(true);
+        const targetIndex = currentVisibleIndex + 1;
+        // Micro-delay per mostrare feedback “Avanti…” senza rallentare percezione (>=120ms)
+        const start = performance.now();
+        setCurrentQuestionIndex(targetIndex);
+        requestAnimationFrame(() => {
+          const elapsed = performance.now() - start;
+          const remaining = elapsed < 120 ? 120 - elapsed : 0;
+          setTimeout(() => setNavTransitioning(false), remaining);
+        });
       }
     }
   };
@@ -281,7 +291,7 @@ const SurveyPage: React.FC<SurveyPageProps> = ({ questions, answers, setAnswers,
       case QuestionType.Welcome:
         return (
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">{currentQuestion.text}</h1>
+            <h1 className="text-fluid-hero font-bold mb-4">{currentQuestion.text}</h1>
             <p className="text-lg max-w-2xl mx-auto mb-8">{currentQuestion.intro}</p>
             <button
               onClick={handleNext}
@@ -321,7 +331,7 @@ const SurveyPage: React.FC<SurveyPageProps> = ({ questions, answers, setAnswers,
       case QuestionType.ThankYou:
         return (
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4 text-success">{currentQuestion.text}</h1>
+            <h1 className="text-fluid-hero font-bold mb-4 text-success">{currentQuestion.text}</h1>
             <p className="text-lg max-w-2xl mx-auto">{currentQuestion.intro}</p>
           </div>
         );
@@ -331,10 +341,10 @@ const SurveyPage: React.FC<SurveyPageProps> = ({ questions, answers, setAnswers,
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-dvh layout-transition">
       {/* Top bar: compact on mobile, spacious on md+ */}
-      <header className="w-full px-3 py-2 md:p-4 sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-gray-200">
-        <div className="max-w-3xl mx-auto flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
+      <header className="w-full px-2 sm:px-3 py-2 md:p-4 sticky top-0 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-gray-200">
+        <div className="content-container flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
           <div className="flex justify-between items-center">
             <Link to="/admin" className="text-[11px] md:text-sm text-gray-500 hover:text-primary transition-colors">{t('common.adminDashboard') as string}</Link>
             <div className="md:hidden ml-4"><LanguageSwitcher /></div>
@@ -348,34 +358,42 @@ const SurveyPage: React.FC<SurveyPageProps> = ({ questions, answers, setAnswers,
           <div className="hidden md:block"><LanguageSwitcher /></div>
         </div>
       </header>
-      <main className="flex-grow px-3 pt-4 pb-6 md:py-10 flex justify-center">
-        <div className="w-full max-w-3xl">
-          <div className="relative">
+      <main className="flex-grow px-2 sm:px-3 pt-4 pb-20 md:pb-10 md:pt-10 overflow-x-hidden">
+        <div className="content-container compact-vertical-space">
+          <div key={currentQuestion?.id} className="relative min-w-0 animate-fade-slide" aria-live="polite">
             {renderContent()}
           </div>
 
+          {/* Action buttons below question/options */}
           {currentQuestion && currentQuestion.type !== QuestionType.Welcome && currentQuestion.type !== QuestionType.ThankYou && (
-            <div className="mt-6 md:mt-10">
-              <div className="flex items-stretch gap-3 md:gap-4">
-                {currentQuestionIndex > 0 && (
-                  <button
-                    onClick={handleBack}
-                    className="bg-gray-200 text-secondary px-4 py-3 rounded-md hover:bg-gray-300 active:scale-[0.98] transition text-sm md:text-base"
-                    aria-label={t('survey.backButton') as string}
-                  >
-                    <ArrowLeftIcon className="w-5 h-5 md:w-6 md:h-6" />
-                  </button>
-                )}
+            <div className={`mt-6 md:mt-10 col-span-full ${(() => {
+              if ([QuestionType.Radio, QuestionType.Checkbox, QuestionType.Ranking].includes(currentQuestion.type)) {
+                const optCount = currentQuestion.options && !Array.isArray(currentQuestion.options) ? Object.keys(currentQuestion.options).filter(k => k !== 'other').length : 0;
+                return optCount < 3 ? 'pt-4 border-t border-gray-200/60' : 'pt-6 border-t border-gray-200';
+              }
+              return '';
+            })()}`}>
+              <div className="flex flex-col gap-3 md:gap-4 max-w-md mx-auto w-full">
                 <button
                   onClick={handleNext}
                   disabled={isNextDisabled() || isSubmitting}
-                  className="bg-primary text-white font-semibold md:font-bold py-3 px-6 rounded-md text-base md:text-lg flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-opacity-90 active:scale-[0.985] transition flex-grow"
+                  className="bg-primary text-white font-semibold md:font-bold py-3 px-6 rounded-md text-base md:text-lg flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-opacity-90 active:scale-[0.985] transition shadow w-full"
                 >
-                  {isSubmitting ? t('survey.submitting') as string : (currentQuestion.type === QuestionType.Email ? t('survey.submit') as string : t('survey.ok') as string)}
+                  {isSubmitting || navTransitioning ? (t('survey.submitting') as string) : (currentQuestion.type === QuestionType.Email ? t('survey.submit') as string : t('survey.ok') as string)}
                   {!isSubmitting && <CheckIcon className="w-5 h-5" />}
                 </button>
+                {currentQuestionIndex > 0 && (
+                  <button
+                    onClick={handleBack}
+                    className="text-sm md:text-base text-gray-500 hover:text-primary transition font-medium flex items-center justify-center gap-1 w-full mt-1"
+                    aria-label={t('survey.backButton') as string}
+                    type="button"
+                  >
+                    <ArrowLeftIcon className="w-4 h-4" /> {t('survey.backButton') as string}
+                  </button>
+                )}
               </div>
-              {submissionError && <p className="text-red-500 mt-4">{submissionError}</p>}
+              {submissionError && <p className="text-red-500 mt-4 text-center">{submissionError}</p>}
             </div>
           )}
         </div>

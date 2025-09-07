@@ -1,0 +1,234 @@
+{
+  "common": {
+    "adminDashboard": "Admin Dashboard",
+    "privacyPolicy": "Privacy Policy",
+    "backToSurvey": "Back to Survey",
+    "other": "Other"
+  },
+  "survey": {
+    "start": "Start",
+    "ok": "OK",
+    "submit": "Submit my answers",
+    "submitting": "Submitting...",
+    "emailLabel": "Your Email (optional):",
+    "emailPlaceholder": "you@email.com",
+    "emailError": "Please enter a valid email address.",
+    "consentLabel": "I declare that I have read and accepted the <a> and I consent to be contacted for the purposes of this project. *",
+    "submissionError": "An error occurred during submission. Please try again.",
+    "backButton": "Back to previous question"
+  },
+  "questionDisplay": {
+    "agePlaceholder": "Type your age here...",
+    "textPlaceholder": "Type your answer here...",
+    "cityPlaceholder": "Start typing your city...",
+    "textareaPlaceholder": "Your opinion is important...",
+    "otherPlaceholder": "Please specify your answer",
+    "rankItem": "Rank item"
+  },
+  "questions": {
+    "welcome": {
+      "text": "Online Dating Experiences: Your Opinion",
+      "intro": "Hi! Thanks for your time. I'm Luca, a developer conducting personal and independent research to better understand the problems of the online dating world in Italy. This survey respects your privacy and won't take more than 2-3 minutes. Your answers are anonymous; at the end, you will have the optional choice to leave your email to be contacted. There are no right or wrong answers; I'm only interested in your honest experience. Thank you so much for your help!"
+    },
+    "age": {
+      "text": "Which age range do you fall into? *",
+      "options": {
+        "under24": "Under 24",
+        "25-30": "25 - 30",
+        "31-35": "31 - 35",
+        "36-40": "36 - 40",
+        "over40": "Over 40"
+      }
+    },
+    "gender": {
+      "text": "Which gender do you identify with? *",
+      "options": {
+        "male": "Man",
+        "female": "Woman",
+        "unknown": "I don't know",
+        "other": "Other"
+      }
+    },
+    "city": {
+      "text": "In which city or region do you primarily live? *"
+    },
+    "apps": {
+      "text": "Which of these dating apps have you actively used in the last 6 months? (You can select more than one) *",
+      "options": {
+        "tinder": "Tinder",
+        "bumble": "Bumble",
+        "hinge": "Hinge",
+        "meetic": "Meetic",
+        "other": "Other",
+        "none": "None"
+      }
+    },
+    "paid": {
+      "text": "Have you ever paid for a subscription or a premium feature on a dating app? *",
+      "options": {
+        "yes": "Yes",
+        "no": "No, never"
+      }
+    },
+    "paidReason": {
+      "intro": "One last question about why you paid. Since you selected that you've paid for an app, this single question helps us better understand what drives users to take this step. Thank you!",
+      "text": "If you paid, what was the main reason? *",
+      "options": {
+        "seeLikes": "To see who liked me (e.g., \"See Who Likes You\")",
+        "moreVisibility": "To get more visibility or unlimited swipes",
+        "advancedFilters": "To unlock more advanced search filters",
+        "seriousPeople": "To try to find more \"serious\" people",
+        "other": "Other"
+      }
+    },
+    "frustrations": {
+      "intro": "Now for the most important part. Please rank these 5 frustrations, dragging the most severe one for you to the top.",
+      "text": "Rank the frustrations (most severe at the top)",
+      "options": {
+        "fakeProfiles": "Fake profiles or people who aren't who they say they are",
+        "endlessChats": "Endless chats that never lead to a real-life meeting",
+        "ghosting": "\"Ghosting\" (disappearing without explanation)",
+        "superficiality": "Superficiality (judging only by photos)",
+        "subscriptionCost": "The cost of subscriptions that don't guarantee results"
+      }
+    },
+    "changeOneThing": {
+      "text": "If you could change ONLY ONE thing about online dating today, what would it be? *"
+    },
+    "businessModel": {
+      "text": "Imagine an ideal dating app. For which of these options would you be most willing to pay? *",
+      "options": {
+        "subscription": "A monthly subscription for unlimited likes and chats",
+        "perDate": "A fixed fee for each quality date the app arranges for you",
+        "features": "Paying only for individual extra features",
+        "notWilling": "I would not be willing to pay"
+      }
+    },
+    "collectEmail": {
+      "text": "Want to help me build an alternative?",
+      "intro": "I'm conducting this research because I'm convinced that a better alternative to the usual dating apps can be created. If you're tired of the problems with dating apps and are interested in staying updated on progress or being among the first to test a future prototype, you can leave your email below. No spam, no selling, maximum privacy."
+    },
+    "thankyou": {
+      "text": "Thank you so much!",
+      "intro": "Your contribution has been crucial. If you left your email, I might contact you soon for a chat. Talk to you soon, Luca"
+    }
+  },
+  "dashboard": {
+    "loading": "Loading dashboard...",
+    "tabs": {
+      "summary": "Summary",
+      "submissions": "Submissions",
+      "insights": "Insights"
+    },
+    "responses": "responses",
+    "response": "response",
+    "respondents": "respondents",
+    "noData": "No data available.",
+    "noResponsesQuestion": "No responses for this question yet.",
+    "otherAnswers": "Other answers (specified)",
+    "allSubmissions": "All Submissions",
+    "completedResponses": "completed responses",
+    "downloadCsv": "Download CSV",
+    "submittedAt": "Submitted at",
+    "noCompletedSubmissions": "No completed submissions yet.",
+    "insights": {
+      "visits": "Visits",
+      "dropoff": "Question drop-off"
+    },
+    "kpi": {
+      "visits": "Visits",
+      "visitsDesc": "Total form visits",
+      "submissions": "Submissions",
+      "submissionsDesc": "Completed forms",
+      "completionRate": "Completion rate",
+      "avgDuration": "Avg. duration",
+      "avgDurationDesc": "Calculated from completed responses"
+    },
+    "analytics": {
+      "sources": "Sources",
+      "devices": "Devices",
+      "countries": "Countries",
+      "cities": "Cities",
+      "browsers": "Browsers",
+      "os": "Operating Systems"
+    },
+    "funnel": {
+      "title": "Question Funnel",
+      "started": "Respondent started answering",
+      "respondents": "respondents",
+      "dropoff": "drop-off",
+      "answered": "answered",
+      "completed": "Respondent completed the form",
+      "completions": "completions"
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: August 25, 2024",
+    "intro": "Thank you for your interest in this research project. Your privacy is very important. This policy explains what data is collected, why, and how it is used, in compliance with Regulation (EU) 2016/679 (GDPR).",
+    "controller": {
+      "title": "1. Data Controller",
+      "text": "The data controller for the data collected through this survey is:",
+      "emailLabel": "Contact Email:"
+    },
+    "dataCollected": {
+      "title": "2. Data Collected",
+      "intro": "Two types of data are collected:",
+      "personal": {
+        "title": "Personal Data (Email Address - Optional)",
+        "text": "The only personal data that may be collected is your email address. The collection of this data is completely optional and occurs only if you voluntarily decide to provide it in the dedicated field, after giving your explicit consent."
+      },
+      "anonymous": {
+        "title": "Anonymous Browsing Data (Analytics)",
+        "text": "To understand how the survey is used and to improve it, we collect technical data in an anonymous and aggregated form. This data cannot be traced back to you individually. It includes:",
+        "items": [
+          "<strong>Traffic Source:</strong> Where visits come from (e.g., Google search, direct link).",
+          "<strong>Country and City:</strong> Your approximate geographical location.",
+          "<strong>Device Data:</strong> Device type, browser, and operating system."
+        ]
+      },
+      "philosophy": "Our philosophy is \"privacy-friendly by design\": we do not use tracking cookies, we do not collect hidden personal data, and we do not perform cross-device tracking."
+    },
+    "purpose": {
+      "title": "3. Purpose of Processing",
+      "text": "Your email address, if provided, will be used <strong class=\"font-semibold\">exclusively</strong> for the following purposes, strictly related to this research project:",
+      "items": [
+        "To contact you for an in-depth interview.",
+        "To send you updates on the project's progress.",
+        "To invite you to test future versions of the product in advance."
+      ],
+      "footer": "Your email address will never be sold, transferred to third parties, or used for unsolicited marketing purposes."
+    },
+    "legalBasis": {
+      "title": "4. Legal Basis for Processing",
+      "text": "The legal basis for collecting and processing your email address is your <strong class=\"font-semibold\">explicit consent</strong>, which you provide via the specific checkbox in the survey, pursuant to Art. 6, par. 1, lett. a) of the GDPR."
+    },
+    "processing": {
+      "title": "5. Method and Place of Processing",
+      "text": "Data is processed using IT tools with the utmost attention to security. The technical infrastructure consists of two main parts:",
+      "items": [
+        "<strong>Web Application (Frontend):</strong> The interface you use is hosted on Vercel's global network (USA), which ensures speed and reliability.",
+        "<strong>Database (Backend):</strong> To ensure maximum compliance with GDPR and protect your data, all survey responses are saved in a database managed by Supabase, physically located in a data center within the European Union (<strong>Frankfurt, Germany</strong>)."
+      ],
+      "footer": "This architecture ensures that your personal data is protected by strict European privacy laws.",
+      "note": "<strong class=\"font-semibold text-secondary\">Important: Association between Email and Responses</strong><br />If you voluntarily decide to provide your email address, it <strong class=\"font-semibold\">will be directly associated with the responses</strong> you provided in the survey. This association is crucial for our research, as it allows us to contact you for potential follow-up interviews with the full context of your opinions. In this case, your answers will no longer be considered anonymous."
+    },
+    "retention": {
+      "title": "6. Data Retention Period",
+      "text": "Your email address will be stored until the purposes for which it was collected are completed, and in any case, until you withdraw your consent. Anonymous and aggregated analytics data are kept indefinitely for statistical purposes."
+    },
+    "rights": {
+      "title": "7. Your Rights",
+      "text": "As a data subject, you have the right at any time to:",
+      "items": [
+        "<strong>Access</strong> your data.",
+        "<strong>Rectify</strong> inaccurate data.",
+        "<strong>Erase</strong> your data (\"right to be forgotten\").",
+        "<strong>Restrict</strong> the processing of your data.",
+        "<strong>Withdraw consent</strong> at any time, without affecting the lawfulness of processing based on consent before its withdrawal.",
+        "<strong>Lodge a complaint</strong> with a supervisory authority (e.g., the Data Protection Authority)."
+      ],
+      "footer": "To exercise your rights, you can send a simple email to <a href=\"mailto:emelinoluca@gmail.com\" class=\"text-primary underline\">emelinoluca@gmail.com</a>."
+    }
+  }
+}

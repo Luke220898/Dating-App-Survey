@@ -120,20 +120,30 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
         return items.length - 1;
     };
 
+    // rAF throttling per evitare layout thrash ad alta frequenza
+    const frameRef = useRef<number | null>(null);
+    const liveRegionRef = useRef<HTMLDivElement | null>(null);
     const handlePointerMove = useCallback((e: PointerEvent) => {
         if (pointerIdRef.current === null || draggedIndexRef.current === null) return;
         if (pointerTypeRef.current === 'touch') {
-            // preveniamo lo scroll mentre si trascina su touch
             e.preventDefault();
         }
-        const from = draggedIndexRef.current;
-        const targetIndex = detectIndexFromPointer(e.clientY);
-        if (from !== null && targetIndex !== -1 && targetIndex !== from) {
-            reorder(from, targetIndex);
-            draggedIndexRef.current = targetIndex;
-            setDraggedIndex(targetIndex); // solo per trigger UI styling
-        }
-    }, [reorder]);
+        if (frameRef.current != null) return; // già pianificato
+        frameRef.current = requestAnimationFrame(() => {
+            frameRef.current = null;
+            const from = draggedIndexRef.current;
+            const targetIndex = detectIndexFromPointer(e.clientY);
+            if (from !== null && targetIndex !== -1 && targetIndex !== from) {
+                reorder(from, targetIndex);
+                draggedIndexRef.current = targetIndex;
+                setDraggedIndex(targetIndex);
+                // Annuncio accessibilità
+                if (liveRegionRef.current) {
+                    liveRegionRef.current.textContent = `${t('questionDisplay.rankItem') || 'Item'} spostato in posizione ${targetIndex + 1}`;
+                }
+            }
+        });
+    }, [reorder, t]);
 
     const handlePointerUp = useCallback((e: PointerEvent) => {
         if (pointerIdRef.current !== null && e.pointerId !== pointerIdRef.current) return;
@@ -144,6 +154,7 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
         document.body.classList.remove('select-none');
         window.removeEventListener('pointermove', handlePointerMove as any);
         window.removeEventListener('pointerup', handlePointerUp as any);
+        if (frameRef.current) { cancelAnimationFrame(frameRef.current); frameRef.current = null; }
     }, [handlePointerMove]);
 
     const startPointerDrag = (e: React.PointerEvent, index: number) => {
@@ -285,12 +296,12 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
                             if (key === 'other') {
                                 return (
                                     <div key={key}>
-                                        <label className={`flex items-center p-4 bg-white rounded-lg cursor-pointer ${isOtherRadioSelected
-                                            ? 'border-2 border-primary'
-                                            : 'border border-gray-300 hover:border-primary'
-                                            }`} onClick={() => handleRadioChange('other')}>
+                                        <label
+                                            className={`interactive-option ${isOtherRadioSelected ? 'is-active' : ''}`}
+                                            onClick={() => handleRadioChange('other')}
+                                        >
                                             <input type="radio" name={question.id} checked={!!isOtherRadioSelected} readOnly className="hidden" />
-                                            <span className="flex-1 text-lg">{value}</span>
+                                            <span className="flex-1 text-lg leading-snug">{value}</span>
                                             {isOtherRadioSelected && <CheckIcon className="w-6 h-6 text-primary" />}
                                         </label>
                                         {isOtherRadioSelected && (
@@ -298,7 +309,7 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
                                                 type="text"
                                                 value={otherValue}
                                                 onChange={handleOtherTextChangeRadio}
-                                                className={otherInputClass}
+                                                className={otherInputClass + ' fade-in'}
                                                 placeholder={t('questionDisplay.otherPlaceholder') as string}
                                                 autoFocus
                                             />
@@ -308,12 +319,13 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
                             }
                             const isSelected = currentAnswer === key;
                             return (
-                                <label key={key} className={`flex items-center p-4 bg-white rounded-lg cursor-pointer ${isSelected
-                                    ? 'border-2 border-primary'
-                                    : 'border border-gray-300 hover:border-primary'
-                                    }`} onClick={() => handleRadioChange(key)}>
+                                <label
+                                    key={key}
+                                    className={`interactive-option ${isSelected ? 'is-active' : ''}`}
+                                    onClick={() => handleRadioChange(key)}
+                                >
                                     <input type="radio" name={question.id} checked={!!isSelected} readOnly className="hidden" />
-                                    <span className="flex-1 text-lg">{value}</span>
+                                    <span className="flex-1 text-lg leading-snug">{value}</span>
                                     {isSelected && <CheckIcon className="w-6 h-6 text-primary" />}
                                 </label>
                             );
@@ -361,12 +373,11 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
                             if (key === 'other') {
                                 return (
                                     <div key={key}>
-                                        <label className={`flex items-center p-4 bg-white rounded-lg cursor-pointer ${isOtherSelectedForCheckbox
-                                            ? 'border-2 border-primary'
-                                            : 'border border-gray-300 hover:border-primary'
-                                            }`}>
+                                        <label
+                                            className={`interactive-option ${isOtherSelectedForCheckbox ? 'is-active' : ''}`}
+                                        >
                                             <input type="checkbox" checked={!!isOtherSelectedForCheckbox} onChange={() => handleCheckboxChange('other')} className="hidden" />
-                                            <span className="flex-1 text-lg">{value}</span>
+                                            <span className="flex-1 text-lg leading-snug">{value}</span>
                                             {isOtherSelectedForCheckbox && <CheckIcon className="w-6 h-6 text-primary" />}
                                         </label>
                                         {isOtherSelectedForCheckbox && (
@@ -374,7 +385,7 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
                                                 type="text"
                                                 value={otherValue}
                                                 onChange={handleOtherTextChangeCheckbox}
-                                                className={otherInputClass}
+                                                className={otherInputClass + ' fade-in'}
                                                 placeholder={t('questionDisplay.otherPlaceholder') as string}
                                                 autoFocus
                                             />
@@ -384,12 +395,12 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
                             }
                             const isSelected = currentSelection.includes(key);
                             return (
-                                <label key={key} className={`flex items-center p-4 bg-white rounded-lg cursor-pointer ${isSelected
-                                    ? 'border-2 border-primary'
-                                    : 'border border-gray-300 hover:border-primary'
-                                    }`}>
+                                <label
+                                    key={key}
+                                    className={`interactive-option ${isSelected ? 'is-active' : ''}`}
+                                >
                                     <input type="checkbox" checked={!!isSelected} onChange={() => handleCheckboxChange(key)} className="hidden" />
-                                    <span className="flex-1 text-lg">{value}</span>
+                                    <span className="flex-1 text-lg leading-snug">{value}</span>
                                     {isSelected && <CheckIcon className="w-6 h-6 text-primary" />}
                                 </label>
                             );
@@ -400,87 +411,91 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
                 if (typeof options !== 'object' || Array.isArray(options)) return null;
                 const optionMap = options as Record<string, string>;
                 return (
-                    <ul className="list-none p-0 space-y-3" ref={listContainerRef}>
-                        {ranking.map((itemKey, index) => {
-                            const isBeingDragged = draggedIndex === index;
-                            const itemText = optionMap[itemKey];
-                            const isActive = draggedIndex === index;
-
-                            return (
-                                <li
-                                    key={itemKey}
-                                    data-idx={index}
-                                    className={`flex items-center gap-4 select-none`}
-                                    role="listitem"
-                                >
-                                    <div className="flex-shrink-0 w-8 text-center">
-                                        <span className="text-xl font-bold text-gray-400">{index + 1}</span>
-                                    </div>
-
-                                    <div
-                                        className={`flex-grow border rounded-xl transition-colors duration-150 relative ${isActive ? 'bg-gray-200 border-primary shadow-inner scale-[0.99] cursor-grabbing' : 'bg-white hover:bg-gray-50 shadow-sm active:scale-[0.995] cursor-grab'}`}
-                                        role="group"
-                                        aria-roledescription="draggable"
-                                        aria-grabbed={isActive}
-                                        aria-label={`${t('questionDisplay.rankItem') || 'Item'} ${index + 1}: ${itemText}`}
-                                        tabIndex={0}
-                                        onPointerDown={(e) => startPointerDrag(e, index)}
-                                        onKeyDown={(e) => {
-                                            if (e.key === ' ' || e.key === 'Enter') {
-                                                if (draggedIndexRef.current === null) {
-                                                    draggedIndexRef.current = index;
-                                                    setDraggedIndex(index);
-                                                } else {
-                                                    draggedIndexRef.current = null;
-                                                    setDraggedIndex(null);
-                                                }
-                                                e.preventDefault();
-                                            } else if (draggedIndexRef.current !== null) {
-                                                if (e.key === 'ArrowUp') {
-                                                    e.preventDefault();
-                                                    const from = draggedIndexRef.current;
-                                                    const to = Math.max(0, from - 1);
-                                                    if (to !== from) {
-                                                        reorder(from, to);
-                                                        draggedIndexRef.current = to;
-                                                        setDraggedIndex(to);
-                                                    }
-                                                } else if (e.key === 'ArrowDown') {
-                                                    e.preventDefault();
-                                                    const from = draggedIndexRef.current;
-                                                    const to = Math.min(ranking.length - 1, from + 1);
-                                                    if (to !== from) {
-                                                        reorder(from, to);
-                                                        draggedIndexRef.current = to;
-                                                        setDraggedIndex(to);
-                                                    }
-                                                } else if (e.key === 'Escape') {
-                                                    draggedIndexRef.current = null;
-                                                    setDraggedIndex(null);
-                                                }
-                                            }
-                                        }}
-                                        style={{ touchAction: isActive ? 'none' as any : 'pan-y' }}
+                    <>
+                        <div ref={liveRegionRef} aria-live="polite" className="sr-only" />
+                        <ul className="list-none p-0 space-y-3" ref={listContainerRef}>
+                            {ranking.map((itemKey, index) => {
+                                const itemText = optionMap[itemKey];
+                                const isActive = draggedIndex === index;
+                                return (
+                                    <li
+                                        key={itemKey}
+                                        data-idx={index}
+                                        className="flex items-center gap-4 select-none"
+                                        role="listitem"
                                     >
-                                        <div className={`flex items-start gap-3 p-4 md:p-5 min-h-[68px]`}>
-                                            <span className="text-base md:text-lg leading-snug text-secondary select-none w-full">
-                                                {itemText}
-                                            </span>
+                                        <div className="flex-shrink-0 w-8 text-center">
+                                            <span className="text-xl font-bold text-gray-400">{index + 1}</span>
                                         </div>
-                                    </div>
-                                </li>
-                            );
-                        })}
-                    </ul>
+                                        <div
+                                            className={`ranking-item ${isActive ? 'drag-active' : ''}`}
+                                            role="group"
+                                            aria-roledescription="draggable"
+                                            aria-grabbed={isActive}
+                                            aria-label={`${t('questionDisplay.rankItem') || 'Item'} ${index + 1}: ${itemText}`}
+                                            tabIndex={0}
+                                            onPointerDown={(e) => startPointerDrag(e, index)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === ' ' || e.key === 'Enter') {
+                                                    if (draggedIndexRef.current === null) {
+                                                        draggedIndexRef.current = index;
+                                                        setDraggedIndex(index);
+                                                    } else {
+                                                        draggedIndexRef.current = null;
+                                                        setDraggedIndex(null);
+                                                    }
+                                                    e.preventDefault();
+                                                } else if (draggedIndexRef.current !== null) {
+                                                    if (e.key === 'ArrowUp') {
+                                                        e.preventDefault();
+                                                        const from = draggedIndexRef.current;
+                                                        const to = Math.max(0, from - 1);
+                                                        if (to !== from) {
+                                                            reorder(from, to);
+                                                            draggedIndexRef.current = to;
+                                                            setDraggedIndex(to);
+                                                        }
+                                                    } else if (e.key === 'ArrowDown') {
+                                                        e.preventDefault();
+                                                        const from = draggedIndexRef.current;
+                                                        const to = Math.min(ranking.length - 1, from + 1);
+                                                        if (to !== from) {
+                                                            reorder(from, to);
+                                                            draggedIndexRef.current = to;
+                                                            setDraggedIndex(to);
+                                                        }
+                                                    } else if (e.key === 'Escape') {
+                                                        draggedIndexRef.current = null;
+                                                        setDraggedIndex(null);
+                                                    }
+                                                }
+                                            }}
+                                            style={{ touchAction: isActive ? 'none' as any : 'pan-y' }}
+                                        >
+                                            <div className="flex items-start gap-3 p-4 md:p-5 min-h-[68px]">
+                                                <span className="text-base md:text-lg leading-snug text-secondary select-none w-full">{itemText}</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </>
                 );
             default: return null;
         }
     }
 
     return (
-        <div>
-            {intro && <p className="text-lg text-gray-600 mb-4">{intro}</p>}
-            <h2 className="text-3xl font-bold mb-8">{text}</h2>
+        <div className="question-block">
+            {intro && (
+                <p className="text-fluid-body text-gray-600 mb-3 md:mb-4 leading-relaxed sm:leading-normal">
+                    {intro}
+                </p>
+            )}
+            <h2 className="font-bold mb-5 md:mb-7 text-[clamp(1.35rem,1.05rem+1.8vw,2.05rem)] leading-snug tracking-tight">
+                {text}
+            </h2>
             {renderInput()}
         </div>
     );

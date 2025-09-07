@@ -3,9 +3,25 @@
    <p>Applicazione web per creare, somministrare e analizzare un questionario di validazione per una futura app di dating.</p>
 </div>
 
+<!-- Performance: Recharts removed, using lightweight SVG charts -->
+
 ## ✨ Obiettivo
 Raccogliere insight reali sugli utenti (abitudini, frustrazioni, disponibilità a pagare, modelli di business preferiti) prima di sviluppare l'app di dating. Il questionario è dinamico, multilingua (IT/EN) e persiste lo stato parziale per evitare perdite di dati.
 
+## ⚡ Performance & Architettura
+
+
+## Localization
+
+Translation JSON files are now served as static assets from `public/locales/*.json` so they are copied verbatim into the production `dist` folder by Vite. During runtime, `LanguageContext` fetches the active language file using `import.meta.env.BASE_URL` to remain compatible with non-root deployments. To add or change translations:
+
+1. Edit (or add) the relevant file under `public/locales/<lang>.json`.
+2. Keep structure consistent (nested keys with sections: `common`, `survey`, `questions`, `dashboard`, `privacy`).
+3. Rebuild (`npm run build`). The files will be available at `<BASE_URL>/locales/<lang>.json`.
+
+If you previously used the `locales/` source folder, it can be removed to avoid divergence (static copies are canonical).
+### Suggerimenti produzione
+1. Esegui build: `npm run build` (output minificato + tree shaking).
 ## 🧱 Stack Tecnico
 - **React 19 + TypeScript**
 - **Vite** (dev & bundling)
@@ -48,6 +64,27 @@ npm install
 npm run dev
 ```
 Apri: http://localhost:5173/
+
+### 🔧 Variabili d'Ambiente
+L'app usa Vite, quindi solo le variabili prefissate `VITE_` sono esposte al client.
+
+File disponibili:
+- `.env.example` (template versionato)
+- `.env.local` (locale, ignorato da Git)
+- `.env.production` (placeholder per pipeline CI/CD)
+
+Chiavi richieste:
+```
+VITE_SUPABASE_URL=<https://xxx.supabase.co>
+VITE_SUPABASE_ANON_KEY=<anon key>
+VITE_LOG_LEVEL=info   # (opzionale: debug|info|warn|error)
+```
+Script `predev` e `prebuild` eseguono `scripts/checkEnv.mjs` e falliscono se le chiavi obbligatorie mancano.
+
+Best practice produzione:
+- Non commitare valori reali in `.env.production`.
+- Iniettare le variabili tramite piattaforma (Vercel, Netlify, GitHub Actions, ecc.).
+- Impostare `VITE_LOG_LEVEL=warn` o `error` in produzione per ridurre rumore in console.
 
 ## 🧪 Admin Dashboard
 La pagina Admin (link nel top-left) recupera tutte le submissions e permette di visualizzare aggregazioni (es. distribuzione risposte). Estendere il parsing se aggiungi nuovi tipi di domanda.

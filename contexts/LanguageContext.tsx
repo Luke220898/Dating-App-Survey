@@ -21,7 +21,9 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     useEffect(() => {
         const fetchTranslations = async () => {
             try {
-                const response = await fetch(`/locales/${language}.json`);
+                const base = (import.meta as any).env?.BASE_URL || '/';
+                const url = `${base.replace(/\/$/, '')}/locales/${language}.json`;
+                const response = await fetch(url, { cache: 'no-store' });
                 if (!response.ok) {
                     throw new Error(`Failed to load ${language}.json`);
                 }
@@ -29,7 +31,6 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
                 setTranslations(data);
             } catch (error) {
                 console.error("Error fetching translations:", error);
-                // Fallback to Italian if English fails or is missing
                 if (language !== 'it') {
                     setLanguage('it');
                 }
@@ -37,7 +38,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
         };
         fetchTranslations();
     }, [language]);
-    
+
     const t = useCallback((key: string): string | string[] => {
         const value = getNestedValue(translations, key);
         if (value === undefined) {

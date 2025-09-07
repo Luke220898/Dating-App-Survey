@@ -1,0 +1,234 @@
+{
+  "common": {
+    "adminDashboard": "Dashboard Admin",
+    "privacyPolicy": "Informativa sulla Privacy",
+    "backToSurvey": "Torna al Sondaggio",
+    "other": "Altro"
+  },
+  "survey": {
+    "start": "Inizia",
+    "ok": "OK",
+    "submit": "Invia le mie risposte",
+    "submitting": "Invio...",
+    "emailLabel": "La tua Email (opzionale):",
+    "emailPlaceholder": "tu@email.com",
+    "emailError": "Per favore, inserisci un indirizzo email valido.",
+    "consentLabel": "Dichiaro di aver letto e accettato l'<a> e acconsento a essere ricontattato/a per le finalità di questo progetto. *",
+    "submissionError": "Si è verificato un errore durante l'invio. Riprova.",
+    "backButton": "Torna alla domanda precedente"
+  },
+  "questionDisplay": {
+    "agePlaceholder": "Scrivi la tua età qui...",
+    "textPlaceholder": "Scrivi la tua risposta...",
+    "cityPlaceholder": "Inizia a scrivere la tua città...",
+    "textareaPlaceholder": "La tua opinione è importante...",
+    "otherPlaceholder": "Specifica la tua risposta",
+    "rankItem": "Elemento classifica"
+  },
+  "questions": {
+    "welcome": {
+      "text": "Esperienze di Dating Online: La Tua Opinione",
+      "intro": "Ciao! Grazie per il tuo tempo. Sono Luca, uno sviluppatore e sto conducendo una ricerca personale e indipendente per capire meglio i problemi del mondo del dating online in Italia. Questo sondaggio rispetta la tua privacy e non ti ruberà più di 2-3 minuti. Le tue risposte sono anonime; alla fine avrai la possibilità facoltativa di lasciare la tua email per essere ricontattato. Non ci sono risposte giuste o sbagliate, mi interessa solo la tua esperienza onesta. Grazie davvero per il tuo aiuto!"
+    },
+    "age": {
+      "text": "In quale fascia di età rientri? *",
+      "options": {
+        "under24": "Sotto i 24 anni",
+        "25-30": "25 - 30 anni",
+        "31-35": "31 - 35 anni",
+        "36-40": "36 - 40 anni",
+        "over40": "Oltre i 40 anni"
+      }
+    },
+    "gender": {
+      "text": "In quale genere ti identifichi? *",
+      "options": {
+        "male": "Uomo",
+        "female": "Donna",
+        "unknown": "Non lo so",
+        "other": "Altro"
+      }
+    },
+    "city": {
+      "text": "In quale città o regione vivi principalmente? *"
+    },
+    "apps": {
+      "text": "Quali di queste app di dating hai usato attivamente negli ultimi 6 mesi? (Puoi selezionarne più di una) *",
+      "options": {
+        "tinder": "Tinder",
+        "bumble": "Bumble",
+        "hinge": "Hinge",
+        "meetic": "Meetic",
+        "other": "Altro",
+        "none": "Nessuna"
+      }
+    },
+    "paid": {
+      "text": "Hai mai pagato per un abbonamento o una feature premium su un'app di dating? *",
+      "options": {
+        "yes": "Sì",
+        "no": "No, mai"
+      }
+    },
+    "paidReason": {
+      "intro": "Un'ultima domanda sul perché hai pagato. Dato che hai selezionato di aver pagato per un'app, questa singola domanda ci aiuta a capire meglio cosa spinge gli utenti a fare questo passo. Grazie!",
+      "text": "Se hai pagato, qual era la ragione principale? *",
+      "options": {
+        "seeLikes": "Per vedere a chi piacevo (es. \"See Who Likes You\")",
+        "moreVisibility": "Per avere più visibilità o swipe illimitati",
+        "advancedFilters": "Per sbloccare filtri di ricerca più avanzati",
+        "seriousPeople": "Per provare a trovare persone più \"serie\"",
+        "other": "Altro"
+      }
+    },
+    "frustrations": {
+      "intro": "Ora la parte più importante. Metti in ordine queste 5 frustrazioni, trascinando in cima quella che per te è la più grave.",
+      "text": "Ordina le frustrazioni (la più grave in alto)",
+      "options": {
+        "fakeProfiles": "Profili falsi o persone che non sono chi dicono di essere",
+        "endlessChats": "Chat infinite che non portano mai a un incontro reale",
+        "ghosting": "Il \"ghosting\" (sparire senza dare spiegazioni)",
+        "superficiality": "La superficialità (giudicare solo dalle foto)",
+        "subscriptionCost": "Il costo degli abbonamenti che non garantiscono risultati"
+      }
+    },
+    "changeOneThing": {
+      "text": "Se potessi cambiare UNA SOLA cosa del dating online oggi, quale sarebbe? *"
+    },
+    "businessModel": {
+      "text": "Immagina un'app di dating ideale. Per quale di queste opzioni saresti più propenso/a a pagare? *",
+      "options": {
+        "subscription": "Un abbonamento mensile per avere like e chat illimitati",
+        "perDate": "Un costo fisso per ogni incontro di qualità che l'app ti organizza",
+        "features": "Pagare solo per singole funzionalità extra",
+        "notWilling": "Non sarei disposto/a a pagare"
+      }
+    },
+    "collectEmail": {
+      "text": "Vuoi aiutarmi a costruire un'alternativa?",
+      "intro": "Sto portando avanti questa ricerca perché sono convinto che si possa creare un'alternativa migliore alle solite app di dating. Se sei stufo/a dei problemi delle app di incontri e ti interessa rimanere aggiornato/a sui progressi o essere tra i primi a testare un futuro prototipo, puoi lasciare la tua email qui sotto. Nessuno spam, nessuna vendita, massima privacy."
+    },
+    "thankyou": {
+      "text": "Grazie di cuore!",
+      "intro": "Il tuo contributo è stato fondamentale. Se hai lasciato la tua email, potrei ricontattarti presto per una chiacchierata. A presto, Luca"
+    }
+  },
+  "dashboard": {
+    "loading": "Caricamento dashboard...",
+    "tabs": {
+      "summary": "Summary",
+      "submissions": "Submissions",
+      "insights": "Insights"
+    },
+    "responses": "risposte",
+    "response": "risposta",
+    "respondents": "utenti",
+    "noData": "Nessun dato disponibile.",
+    "noResponsesQuestion": "Nessuna risposta per questa domanda ancora.",
+    "otherAnswers": "Altre risposte (specificato)",
+    "allSubmissions": "Tutte le Risposte",
+    "completedResponses": "risposte completate",
+    "downloadCsv": "Scarica CSV",
+    "submittedAt": "Inviato il",
+    "noCompletedSubmissions": "Nessuna risposta completata ancora.",
+    "insights": {
+      "visits": "Visite",
+      "dropoff": "Abbandono per domanda"
+    },
+    "kpi": {
+      "visits": "Visite",
+      "visitsDesc": "Visite totali al modulo",
+      "submissions": "Risposte",
+      "submissionsDesc": "Moduli completati",
+      "completionRate": "Tasso di completamento",
+      "avgDuration": "Durata media",
+      "avgDurationDesc": "Calcolata dalle risposte completate"
+    },
+    "analytics": {
+      "sources": "Sorgenti",
+      "devices": "Dispositivi",
+      "countries": "Paesi",
+      "cities": "Città",
+      "browsers": "Browser",
+      "os": "Sistemi Operativi"
+    },
+    "funnel": {
+      "title": "Funnel Domande",
+      "started": "L'utente ha iniziato a rispondere",
+      "respondents": "utenti",
+      "dropoff": "abbandono",
+      "answered": "hanno risposto",
+      "completed": "L'utente ha completato il modulo",
+      "completions": "completamenti"
+    }
+  },
+  "privacy": {
+    "title": "Informativa sulla Privacy",
+    "lastUpdated": "Ultimo aggiornamento: 25 Agosto 2024",
+    "intro": "Grazie per il tuo interesse in questo progetto di ricerca. La tua privacy è molto importante. Questa informativa spiega quali dati vengono raccolti, perché e come vengono utilizzati, in conformità con il Regolamento (UE) 2016/679 (GDPR).",
+    "controller": {
+      "title": "1. Titolare del Trattamento",
+      "text": "Il titolare del trattamento dei dati raccolti tramite questo sondaggio è:",
+      "emailLabel": "Email di contatto:"
+    },
+    "dataCollected": {
+      "title": "2. Dati Raccolti",
+      "intro": "Vengono raccolte due tipologie di dati:",
+      "personal": {
+        "title": "Dato Personale (Indirizzo Email - Opzionale)",
+        "text": "L'unico dato personale che potrebbe essere raccolto è il tuo indirizzo email. La raccolta di questo dato è completamente facoltativa e avviene solo se decidi volontariamente di fornirlo nell'apposito campo, dopo aver dato il tuo consenso esplicito."
+      },
+      "anonymous": {
+        "title": "Dati di Navigazione Anonimi (Analytics)",
+        "text": "Per capire come viene utilizzato il sondaggio e migliorarlo, raccogliamo dati tecnici in forma anonima e aggregata. Questi dati non possono essere ricondotti a te individualmente. Includono:",
+        "items": [
+          "<strong>Sorgente di Traffico:</strong> Da dove provengono le visite (es. ricerca Google, link diretto).",
+          "<strong>Paese e Città:</strong> La tua posizione geografica approssimativa.",
+          "<strong>Dati del Dispositivo:</strong> Tipo di dispositivo, browser e sistema operativo."
+        ]
+      },
+      "philosophy": "La nostra filosofia è \"privacy-friendly by design\": non utilizziamo cookie di tracciamento, non raccogliamo dati personali nascosti e non effettuiamo cross-device tracking."
+    },
+    "purpose": {
+      "title": "3. Finalità del Trattamento",
+      "text": "Il tuo indirizzo email, se fornito, sarà utilizzato <strong class=\"font-semibold\">esclusivamente</strong> per le seguenti finalità, strettamente legate a questo progetto di ricerca:",
+      "items": [
+        "Ricontattarti per invitarti a un'intervista di approfondimento.",
+        "Inviarti aggiornamenti sullo stato di avanzamento del progetto.",
+        "Invitarti a testare in anteprima eventuali versioni future del prodotto."
+      ],
+      "footer": "Il tuo indirizzo email non sarà mai venduto, ceduto a terzi o utilizzato per finalità di marketing non richieste."
+    },
+    "legalBasis": {
+      "title": "4. Base Giuridica del Trattamento",
+      "text": "La base giuridica per la raccolta e il trattamento del tuo indirizzo email è il tuo <strong class=\"font-semibold\">consenso esplicito</strong>, che fornisci tramite l'apposita casella di controllo nel sondaggio, ai sensi dell'art. 6, par. 1, lett. a) del GDPR."
+    },
+    "processing": {
+      "title": "5. Modalità e Luogo di Trattamento",
+      "text": "I dati sono trattati con strumenti informatici e la massima attenzione alla sicurezza. L'infrastruttura tecnica si compone di due parti principali:",
+      "items": [
+        "<strong>Applicazione Web (Frontend):</strong> L'interfaccia che utilizzi è ospitata sulla rete globale di Vercel (USA), che garantisce velocità e affidabilità.",
+        "<strong>Database (Backend):</strong> Per garantire la massima conformità con il GDPR e proteggere i tuoi dati, tutte le risposte al sondaggio sono salvate in un database gestito da Supabase, situato fisicamente in un data center all'interno dell'Unione Europea (<strong>Francoforte, Germania</strong>)."
+      ],
+      "footer": "Questa architettura assicura che i tuoi dati personali siano protetti dalle rigorose leggi europee sulla privacy.",
+      "note": "<strong class=\"font-semibold text-secondary\">Importante: Associazione tra Email e Risposte</strong><br />Se decidi di fornire volontariamente il tuo indirizzo email, questo <strong class=\"font-semibold\">verrà associato direttamente alle risposte</strong> che hai fornito nel sondaggio. Questa associazione è fondamentale per la nostra ricerca, in quanto ci permette di ricontattarti per eventuali interviste di approfondimento avendo il contesto completo delle tue opinioni. In questo caso, le tue risposte non saranno più considerate anonime."
+    },
+    "retention": {
+      "title": "6. Periodo di Conservazione dei Dati",
+      "text": "Il tuo indirizzo email sarà conservato fino al completamento delle finalità per cui è stato raccolto, e comunque fino a quando non revocherai il tuo consenso. I dati di analytics anonimi e aggregati vengono conservati senza limiti di tempo per finalità statistiche."
+    },
+    "rights": {
+      "title": "7. I Tuoi Diritti",
+      "text": "In qualità di interessato, hai il diritto in qualsiasi momento di:",
+      "items": [
+        "<strong>Accedere</strong> ai tuoi dati.",
+        "<strong>Rettificare</strong> i dati inesatti.",
+        "<strong>Cancellare</strong> i tuoi dati (\"diritto all'oblio\").",
+        "<strong>Limitare</strong> il trattamento dei tuoi dati.",
+        "<strong>Revocare il consenso</strong> in qualsiasi momento, senza pregiudicare la liceità del trattamento basata sul consenso prestato prima della revoca.",
+        "<strong>Proporre reclamo</strong> ad un'autorità di controllo (es. il Garante per la Protezione dei Dati Personali)."
+      ],
+      "footer": "Per esercitare i tuoi diritti, puoi inviare una semplice email a <a href=\"mailto:emelinoluca@gmail.com\" class=\"text-primary underline\">emelinoluca@gmail.com</a>."
+    }
+  }
+}

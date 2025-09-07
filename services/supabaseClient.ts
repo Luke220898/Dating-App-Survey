@@ -1,18 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
+import type { Database } from '../types/supabase';
 
-// --- GESTIONE DELLE CREDENZIALI ---
-// Le chiavi sono definite qui per la compatibilità con un ambiente eseguito direttamente nel browser (senza un "build step").
-// Questo assicura che l'applicazione funzioni correttamente in sviluppo locale e in produzione.
-//
-// NOTA SULLA SICUREZZA: In un workflow di Continuous Integration (CI) come GitHub Actions,
-// queste chiavi vengono sostituite dinamicamente al momento del test con credenziali sicure
-// fornite tramite "secrets", garantendo che le chiavi di produzione non siano esposte.
-const supabaseUrl = 'https://annyuowenmyfuvaavhmd.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFubnl1b3dlbm15ZnV2YWF2aG1kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwNTQ4ODIsImV4cCI6MjA3MTYzMDg4Mn0.BSmiyybr8VfutFv9oqFkd4NW2rEI30HVE8jZzgSddAY';
+// Centralized Supabase browser client.
+// Usa variabili ambiente Vite: VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
+// In assenza (sviluppo locale non configurato) emette un warning e lancia errore bloccante.
+const url = (import.meta as any).env?.VITE_SUPABASE_URL as string | undefined;
+const anon = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY as string | undefined;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  // Questa verifica è una salvaguardia ma non dovrebbe attivarsi con i valori hardcoded.
-  throw new Error("Le variabili Supabase URL e Anon Key sono mancanti.");
+if (!url || !anon) {
+  // Manteniamo messaggio conciso per non esporre dettagli in produzione.
+  console.warn('[supabaseClient] Variabili ambiente mancanti: VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY');
+  throw new Error('Configurazione Supabase mancante. Definire le variabili ambiente.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient<Database>(url, anon, {
+  auth: {
+    persistSession: false // nessuna sessione utente richiesta per semplice survey pubblico
+  }
+});
