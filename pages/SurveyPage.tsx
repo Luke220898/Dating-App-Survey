@@ -332,40 +332,44 @@ const SurveyPage: React.FC<SurveyPageProps> = ({ questions, answers, setAnswers,
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="w-full p-4">
-        <div className="max-w-3xl mx-auto flex justify-between items-center">
-          <Link to="/admin" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('common.adminDashboard') as string}</Link>
-          <LanguageSwitcher />
-        </div>
-      </header>
-      <main className="flex-grow flex items-center justify-center p-4">
-        <div className="w-full max-w-3xl">
+      {/* Top bar: compact on mobile, spacious on md+ */}
+      <header className="w-full px-3 py-2 md:p-4 sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-gray-200">
+        <div className="max-w-3xl mx-auto flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
+          <div className="flex justify-between items-center">
+            <Link to="/admin" className="text-[11px] md:text-sm text-gray-500 hover:text-primary transition-colors">{t('common.adminDashboard') as string}</Link>
+            <div className="md:hidden ml-4"><LanguageSwitcher /></div>
+          </div>
+          {/* Progress bar moved to top on mobile for better immediate context */}
           {currentQuestion && currentQuestion.type !== QuestionType.Welcome && currentQuestion.type !== QuestionType.ThankYou && (
-            <div className="mb-8">
+            <div className="w-full md:order-none order-3 md:mt-0">
               <ProgressBar current={currentProgress} total={totalProgressSteps} />
             </div>
           )}
-
+          <div className="hidden md:block"><LanguageSwitcher /></div>
+        </div>
+      </header>
+      <main className="flex-grow px-3 pt-4 pb-6 md:py-10 flex justify-center">
+        <div className="w-full max-w-3xl">
           <div className="relative">
             {renderContent()}
           </div>
 
           {currentQuestion && currentQuestion.type !== QuestionType.Welcome && currentQuestion.type !== QuestionType.ThankYou && (
-            <div className="mt-8">
-              <div className="flex items-center gap-4">
+            <div className="mt-6 md:mt-10">
+              <div className="flex items-stretch gap-3 md:gap-4">
                 {currentQuestionIndex > 0 && (
                   <button
                     onClick={handleBack}
-                    className="bg-gray-200 text-secondary p-3 rounded-md hover:bg-gray-300"
+                    className="bg-gray-200 text-secondary px-4 py-3 rounded-md hover:bg-gray-300 active:scale-[0.98] transition text-sm md:text-base"
                     aria-label={t('survey.backButton') as string}
                   >
-                    <ArrowLeftIcon className="w-6 h-6" />
+                    <ArrowLeftIcon className="w-5 h-5 md:w-6 md:h-6" />
                   </button>
                 )}
                 <button
                   onClick={handleNext}
                   disabled={isNextDisabled() || isSubmitting}
-                  className="bg-primary text-white font-bold py-2 px-6 rounded-md text-lg flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-opacity-90 flex-grow"
+                  className="bg-primary text-white font-semibold md:font-bold py-3 px-6 rounded-md text-base md:text-lg flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-opacity-90 active:scale-[0.985] transition flex-grow"
                 >
                   {isSubmitting ? t('survey.submitting') as string : (currentQuestion.type === QuestionType.Email ? t('survey.submit') as string : t('survey.ok') as string)}
                   {!isSubmitting && <CheckIcon className="w-5 h-5" />}

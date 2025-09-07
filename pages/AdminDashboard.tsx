@@ -11,7 +11,7 @@ import LanguageSwitcher from '../components/LanguageSwitcher';
 const formatAnswerForDisplay = (answer: Answer, question: Question, t: (key: string) => string | string[]): string => {
     if (answer === null || answer === undefined) return '';
     if (Array.isArray(answer) && answer.length === 0) return '';
-    
+
     const options = question.options;
 
     // Handle key-value options (Radio, Checkbox, Ranking)
@@ -20,10 +20,10 @@ const formatAnswerForDisplay = (answer: Answer, question: Question, t: (key: str
         const otherText = t('common.other') as string;
 
         const formatSingleAnswer = (ans: string) => {
-             if (optionMap[ans]) {
+            if (optionMap[ans]) {
                 return optionMap[ans]; // It's a predefined option key
             }
-             // It's a custom "Other" answer.
+            // It's a custom "Other" answer.
             if (!Object.values(optionMap).includes(ans) && !Object.keys(optionMap).includes(ans)) {
                 if (ans.trim() === '' || ans.trim() === ' ') {
                     return otherText; // Represents "Other" selected but with no text
@@ -37,12 +37,12 @@ const formatAnswerForDisplay = (answer: Answer, question: Question, t: (key: str
         if (question.type === QuestionType.Ranking && Array.isArray(answer)) {
             return answer.map((key, index) => `${index + 1}. ${optionMap[key as string] || key}`).join('; ');
         }
-        
+
         // Handle Checkbox
-        if (Array.isArray(answer)) { 
+        if (Array.isArray(answer)) {
             return answer.map(formatSingleAnswer).join(', ');
         }
-        
+
         // Handle Radio or custom value
         return formatSingleAnswer(answer as string);
     }
@@ -57,22 +57,21 @@ const formatAnswerForDisplay = (answer: Answer, question: Question, t: (key: str
 const NavLink: FC<{ active: boolean; onClick: () => void; children: React.ReactNode }> = ({ active, children, onClick }) => (
     <button
         onClick={onClick}
-        className={`px-3 py-2 font-medium text-sm rounded-md transition-colors ${
-            active
+        className={`px-3 py-2 font-medium text-sm rounded-md transition-colors ${active
                 ? 'bg-gray-200 text-primary'
                 : 'text-gray-500 hover:text-primary hover:bg-gray-100'
-        }`}
+            }`}
     >
         {children}
     </button>
 );
 
 const KpiCard: FC<{ title: string; value: string | number; description?: string }> = ({ title, value, description }) => (
-  <div className="bg-white p-4 rounded-lg border border-gray-200">
-    <h3 className="text-gray-500 text-sm font-medium">{title}</h3>
-    <p className="text-3xl font-bold text-primary mt-1">{value}</p>
-    {description && <p className="text-xs text-gray-400 mt-1">{description}</p>}
-  </div>
+    <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <h3 className="text-gray-500 text-sm font-medium">{title}</h3>
+        <p className="text-3xl font-bold text-primary mt-1">{value}</p>
+        {description && <p className="text-xs text-gray-400 mt-1">{description}</p>}
+    </div>
 );
 
 const NoDataPlaceholder: FC<{ message?: string }> = ({ message }) => {
@@ -100,7 +99,7 @@ const QuestionSummary: FC<{ question: Question; submissions: Submission[] }> = (
         if (totalRespondentsForQuestion === 0 || !question.options || Array.isArray(question.options)) {
             return { summaryData: [], otherAnswers: [], totalRespondents: 0, totalSelections: 0 };
         }
-        
+
         const optionMap = question.options as Record<string, string>;
         const counts: Record<string, number> = Object.fromEntries(Object.keys(optionMap).map(key => [key, 0]));
         const customAnswerCounts: Record<string, number> = {};
@@ -109,7 +108,7 @@ const QuestionSummary: FC<{ question: Question; submissions: Submission[] }> = (
         respondents.forEach(sub => {
             const answer = sub.answers[question.id];
             const answerArray = Array.isArray(answer) ? answer : [answer as string];
-            
+
             let hasProvidedCustomAnswer = false;
             answerArray.forEach(ans => {
                 if (typeof ans === 'string' && ans.trim()) {
@@ -126,7 +125,7 @@ const QuestionSummary: FC<{ question: Question; submissions: Submission[] }> = (
                 counts['other']++;
             }
         });
-        
+
         const denominator = totalRespondentsForQuestion > 0 ? totalRespondentsForQuestion : 1;
 
         const finalSummaryData = Object.entries(optionMap).map(([key, value]) => ({
@@ -135,13 +134,13 @@ const QuestionSummary: FC<{ question: Question; submissions: Submission[] }> = (
             value: counts[key] || 0,
             percentage: ((counts[key] || 0) / denominator) * 100,
         }));
-        
+
         const finalOtherAnswers = Object.entries(customAnswerCounts)
             .map(([text, count]) => ({ text, count }))
             .sort((a, b) => b.count - a.count);
 
-        return { 
-            summaryData: finalSummaryData, 
+        return {
+            summaryData: finalSummaryData,
             otherAnswers: finalOtherAnswers,
             totalRespondents: totalRespondentsForQuestion,
             totalSelections: totalSelectionsCount
@@ -151,7 +150,7 @@ const QuestionSummary: FC<{ question: Question; submissions: Submission[] }> = (
 
     const getHeader = () => {
         if (question.type === QuestionType.Checkbox) {
-             return `${totalSelections} ${t('dashboard.responses') as string} from ${totalRespondents} ${t('dashboard.respondents') as string}`;
+            return `${totalSelections} ${t('dashboard.responses') as string} from ${totalRespondents} ${t('dashboard.respondents') as string}`;
         }
         return `${totalRespondents} ${totalRespondents !== 1 ? t('dashboard.responses') as string : t('dashboard.response') as string}`;
     };
@@ -204,9 +203,9 @@ const TextResponses: FC<{ question: Question; submissions: Submission[] }> = ({ 
     const responses = submissions
         .map(s => s.answers[question.id])
         .filter(answer => typeof answer === 'string' && answer.trim() !== '') as string[];
-    
+
     return (
-         <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="bg-white p-6 rounded-lg border border-gray-200">
             <h3 className="font-bold text-primary mb-1">{question.text}</h3>
             <p className="text-sm text-gray-500 mb-4">{responses.length} {responses.length !== 1 ? t('dashboard.responses') as string : t('dashboard.response') as string}</p>
             {responses.length > 0 ? (
@@ -246,13 +245,13 @@ const SubmissionsView: FC<{ questions: Question[]; submissions: Submission[] }> 
     const { t } = useLanguage();
     const completedSubmissions = submissions.filter(s => s.status === 'completed');
     const answerableQuestions = questions.filter(q => q.type !== QuestionType.Welcome && q.type !== QuestionType.ThankYou);
-    
+
     const downloadCSV = () => {
         const escapeCsvCell = (cell: string | number) => `"${String(cell).replace(/"/g, '""')}"`;
-    
+
         const headers = [t('dashboard.submittedAt') as string, ...answerableQuestions.map(q => q.text)];
         const headerRow = headers.map(escapeCsvCell).join(',');
-    
+
         const dataRows = completedSubmissions.map(sub => {
             const row = [
                 new Date(sub.timestamp).toLocaleString(),
@@ -260,7 +259,7 @@ const SubmissionsView: FC<{ questions: Question[]; submissions: Submission[] }> 
             ];
             return row.map(escapeCsvCell).join(',');
         });
-    
+
         const bom = '\uFEFF'; // Byte Order Mark for UTF-8
         const csvContent = "data:text/csv;charset=utf-8," + bom + [headerRow, ...dataRows].join('\n');
         const encodedUri = encodeURI(csvContent);
@@ -339,7 +338,7 @@ const AnalyticsChartCard: FC<{ title: string; submissions: Submission[]; dataKey
         return Object.entries(counts)
             .map(([name, count]) => ({ name, count, percentage: (count / total) * 100 }))
             .sort((a, b) => b.count - a.count);
-            
+
     }, [submissions, dataKey]);
 
     if (!processedData) {
@@ -350,7 +349,7 @@ const AnalyticsChartCard: FC<{ title: string; submissions: Submission[]; dataKey
             </div>
         );
     }
-    
+
     const chartData = processedData.slice(0, 5);
 
     return (
@@ -361,7 +360,7 @@ const AnalyticsChartCard: FC<{ title: string; submissions: Submission[]; dataKey
                     <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 20, left: 20, bottom: 0 }}>
                         <XAxis type="number" hide />
                         <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} width={80} tick={{ fontSize: 12, fill: '#34495e' }} />
-                        <Tooltip cursor={{fill: '#f7f9fa'}} contentStyle={{backgroundColor: 'white', border: '1px solid #ecf0f1', borderRadius: '0.5rem'}} />
+                        <Tooltip cursor={{ fill: '#f7f9fa' }} contentStyle={{ backgroundColor: 'white', border: '1px solid #ecf0f1', borderRadius: '0.5rem' }} />
                         <Bar dataKey="count" fill="#2c3e50" barSize={20} radius={[0, 4, 4, 0]} />
                     </BarChart>
                 </ResponsiveContainer>
@@ -381,7 +380,7 @@ const AnalyticsChartCard: FC<{ title: string; submissions: Submission[]; dataKey
 const InsightsView: FC<{ questions: Question[]; submissions: Submission[] }> = ({ questions, submissions }) => {
     const { t } = useLanguage();
     const [activeTab, setActiveTab] = useState<'visits' | 'dropoff'>('visits');
-    
+
     const totalSubmissions = submissions.length;
     const completedSubmissions = submissions.filter(s => s.status === 'completed');
     const completionRate = totalSubmissions > 0 ? `${((completedSubmissions.length / totalSubmissions) * 100).toFixed(2)}%` : '0%';
@@ -394,12 +393,12 @@ const InsightsView: FC<{ questions: Question[]; submissions: Submission[] }> = (
     }, [completedSubmissions]);
 
     const funnelData = useMemo(() => {
-        const funnelQuestions = questions.filter(q => 
-            q.type !== QuestionType.Welcome && 
-            q.type !== QuestionType.ThankYou && 
+        const funnelQuestions = questions.filter(q =>
+            q.type !== QuestionType.Welcome &&
+            q.type !== QuestionType.ThankYou &&
             q.type !== QuestionType.Email
         );
-        
+
         const result = [];
         let activeSubmissions = [...submissions];
 
@@ -412,14 +411,14 @@ const InsightsView: FC<{ questions: Question[]; submissions: Submission[] }> = (
             const eligibleCount = eligibleSubmissions.length;
 
             // Of those eligible, who actually answered?
-            const answeredSubmissions = eligibleSubmissions.filter(s => 
+            const answeredSubmissions = eligibleSubmissions.filter(s =>
                 s.answers.hasOwnProperty(question.id) &&
                 s.answers[question.id] !== null &&
                 String(s.answers[question.id]).trim() !== '' &&
                 (Array.isArray(s.answers[question.id]) ? (s.answers[question.id] as any[]).length > 0 : true)
             );
             const answeredCount = answeredSubmissions.length;
-            
+
             // The real drop-off is only among those who were eligible
             const dropOff = eligibleCount - answeredCount;
 
@@ -432,13 +431,13 @@ const InsightsView: FC<{ questions: Question[]; submissions: Submission[] }> = (
 
             // The people for the next stage are those who were *not* eligible for this question
             // (they took another branch) PLUS those who *were* eligible and answered it.
-            const nonEligibleSubmissions = activeSubmissions.filter(s => 
+            const nonEligibleSubmissions = activeSubmissions.filter(s =>
                 !eligibleSubmissions.some(es => es.id === s.id)
             );
-            
+
             activeSubmissions = [...nonEligibleSubmissions, ...answeredSubmissions];
         }
-        
+
         return result;
     }, [questions, submissions]);
 
@@ -449,7 +448,7 @@ const InsightsView: FC<{ questions: Question[]; submissions: Submission[] }> = (
                 <NavLink active={activeTab === 'visits'} onClick={() => setActiveTab('visits')}>{t('dashboard.insights.visits') as string}</NavLink>
                 <NavLink active={activeTab === 'dropoff'} onClick={() => setActiveTab('dropoff')}>{t('dashboard.insights.dropoff') as string}</NavLink>
             </div>
-            
+
             {activeTab === 'visits' && (
                 <div className="space-y-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -458,7 +457,7 @@ const InsightsView: FC<{ questions: Question[]; submissions: Submission[] }> = (
                         <KpiCard title={t('dashboard.kpi.completionRate') as string} value={completionRate} />
                         <KpiCard title={t('dashboard.kpi.avgDuration') as string} value={formatDuration(averageDuration)} description={t('dashboard.kpi.avgDurationDesc') as string} />
                     </div>
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <AnalyticsChartCard title={t('dashboard.analytics.sources') as string} submissions={submissions} dataKey="source" />
                         <AnalyticsChartCard title={t('dashboard.analytics.devices') as string} submissions={submissions} dataKey="device" />
                         <AnalyticsChartCard title={t('dashboard.analytics.countries') as string} submissions={submissions} dataKey="country" />
@@ -470,24 +469,24 @@ const InsightsView: FC<{ questions: Question[]; submissions: Submission[] }> = (
             )}
 
             {activeTab === 'dropoff' && (
-                 <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <div className="bg-white p-6 rounded-lg border border-gray-200">
                     <h3 className="font-bold text-primary mb-4">{t('dashboard.funnel.title') as string}</h3>
                     <div className="space-y-2">
                         <div className="flex items-center gap-4 p-3">
-                           <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">✓</div>
-                           <div className="flex-grow">
-                               <p className="font-semibold">{t('dashboard.funnel.started') as string}</p>
-                               <p className="text-sm text-gray-500">{submissions.length} {t('dashboard.funnel.respondents') as string}</p>
-                           </div>
+                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">✓</div>
+                            <div className="flex-grow">
+                                <p className="font-semibold">{t('dashboard.funnel.started') as string}</p>
+                                <p className="text-sm text-gray-500">{submissions.length} {t('dashboard.funnel.respondents') as string}</p>
+                            </div>
                         </div>
                         {funnelData.map(({ question, answered, reached, dropOff }, index) => (
                             <React.Fragment key={index}>
                                 <div className="pl-7">
                                     <div className="border-l-2 border-dashed border-gray-300 h-8 ml-3.5"></div>
-                                    {dropOff > 0 && reached > 0 && <p className="text-xs text-red-500 ml-6">-{dropOff} {t('dashboard.funnel.dropoff') as string} ({(dropOff/reached * 100).toFixed(2)}%)</p>}
+                                    {dropOff > 0 && reached > 0 && <p className="text-xs text-red-500 ml-6">-{dropOff} {t('dashboard.funnel.dropoff') as string} ({(dropOff / reached * 100).toFixed(2)}%)</p>}
                                 </div>
                                 <div className="flex items-center gap-4 p-3">
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center font-mono text-sm">{index+1}</div>
+                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center font-mono text-sm">{index + 1}</div>
                                     <div className="flex-grow">
                                         <p className="font-semibold">{question}</p>
                                         <p className="text-sm text-gray-500">{answered} / {reached} {t('dashboard.funnel.answered') as string}</p>
@@ -495,18 +494,18 @@ const InsightsView: FC<{ questions: Question[]; submissions: Submission[] }> = (
                                 </div>
                             </React.Fragment>
                         ))}
-                         <div className="pl-7">
+                        <div className="pl-7">
                             <div className="border-l-2 border-dashed border-gray-300 h-8 ml-3.5"></div>
                         </div>
                         <div className="flex items-center gap-4 p-3">
-                           <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">✓</div>
-                           <div className="flex-grow">
-                               <p className="font-semibold">{t('dashboard.funnel.completed') as string}</p>
-                               <p className="text-sm text-gray-500">{completedSubmissions.length} {t('dashboard.funnel.completions') as string}</p>
-                           </div>
+                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">✓</div>
+                            <div className="flex-grow">
+                                <p className="font-semibold">{t('dashboard.funnel.completed') as string}</p>
+                                <p className="text-sm text-gray-500">{completedSubmissions.length} {t('dashboard.funnel.completions') as string}</p>
+                            </div>
                         </div>
                     </div>
-                 </div>
+                </div>
             )}
         </div>
     );
@@ -515,53 +514,53 @@ const InsightsView: FC<{ questions: Question[]; submissions: Submission[] }> = (
 // --- MAIN DASHBOARD COMPONENT ---
 
 const AdminDashboard: React.FC<{ questions: Question[] }> = ({ questions }) => {
-  const { t } = useLanguage();
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'summary' | 'submissions' | 'insights'>('summary');
+    const { t } = useLanguage();
+    const [submissions, setSubmissions] = useState<Submission[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<'summary' | 'submissions' | 'insights'>('summary');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const data = await getSurveyData();
-      setSubmissions(data.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
-      setLoading(false);
-    };
-    fetchData();
-  }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            const data = await getSurveyData();
+            setSubmissions(data.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+            setLoading(false);
+        };
+        fetchData();
+    }, []);
 
-  if (loading) {
-    return <div className="flex justify-center items-center h-screen"><p>{t('dashboard.loading') as string}</p></div>;
-  }
+    if (loading) {
+        return <div className="flex justify-center items-center h-screen"><p>{t('dashboard.loading') as string}</p></div>;
+    }
 
-  return (
-    <div className="p-4 sm:p-8 bg-background min-h-screen">
-      <div className="max-w-4xl mx-auto">
-        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
-            <div className="w-full sm:w-auto">
-                <h1 className="text-2xl sm:text-3xl font-bold text-primary truncate">{t('questions.welcome.text') as string}</h1>
-                <Link to="/" className="text-sm text-gray-500 hover:text-primary transition-colors">&larr; {t('common.backToSurvey') as string}</Link>
+    return (
+        <div className="p-4 sm:p-8 bg-background min-h-screen">
+            <div className="max-w-4xl mx-auto">
+                <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
+                    <div className="w-full sm:w-auto">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-primary truncate">{t('questions.welcome.text') as string}</h1>
+                        <Link to="/" className="text-sm text-gray-500 hover:text-primary transition-colors">&larr; {t('common.backToSurvey') as string}</Link>
+                    </div>
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
+                        <div className="bg-white p-1.5 rounded-lg border border-gray-200 w-full sm:w-auto">
+                            <nav className="flex items-center gap-1 justify-around sm:justify-start">
+                                <NavLink active={activeTab === 'summary'} onClick={() => setActiveTab('summary')}>{t('dashboard.tabs.summary') as string}</NavLink>
+                                <NavLink active={activeTab === 'submissions'} onClick={() => setActiveTab('submissions')}>{t('dashboard.tabs.submissions') as string}</NavLink>
+                                <NavLink active={activeTab === 'insights'} onClick={() => setActiveTab('insights')}>{t('dashboard.tabs.insights') as string}</NavLink>
+                            </nav>
+                        </div>
+                        <LanguageSwitcher />
+                    </div>
+                </header>
+
+                <main>
+                    {activeTab === 'summary' && <SummaryView questions={questions} submissions={submissions} />}
+                    {activeTab === 'submissions' && <SubmissionsView questions={questions} submissions={submissions} />}
+                    {activeTab === 'insights' && <InsightsView questions={questions} submissions={submissions} />}
+                </main>
             </div>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
-                <div className="bg-white p-1.5 rounded-lg border border-gray-200 w-full sm:w-auto">
-                    <nav className="flex items-center gap-1 justify-around sm:justify-start">
-                        <NavLink active={activeTab === 'summary'} onClick={() => setActiveTab('summary')}>{t('dashboard.tabs.summary') as string}</NavLink>
-                        <NavLink active={activeTab === 'submissions'} onClick={() => setActiveTab('submissions')}>{t('dashboard.tabs.submissions') as string}</NavLink>
-                        <NavLink active={activeTab === 'insights'} onClick={() => setActiveTab('insights')}>{t('dashboard.tabs.insights') as string}</NavLink>
-                    </nav>
-                </div>
-                <LanguageSwitcher />
-            </div>
-        </header>
-        
-        <main>
-            {activeTab === 'summary' && <SummaryView questions={questions} submissions={submissions} />}
-            {activeTab === 'submissions' && <SubmissionsView questions={questions} submissions={submissions} />}
-            {activeTab === 'insights' && <InsightsView questions={questions} submissions={submissions} />}
-        </main>
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default AdminDashboard;

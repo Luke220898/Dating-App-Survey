@@ -1,0 +1,42 @@
+/* Tailwind v4 unified import */
+@import "tailwindcss";
+
+/* Design tokens (@theme) — must come AFTER the import in v4 so the plugin can merge them */
+@theme {
+  /* Fonts */
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  /* Original brand colors (matched to previous tailwind.config.js) */
+  --color-primary: #2c3e50;
+  --color-secondary: #34495e;
+  --color-background: #f7f9fa;
+  --color-success: #2ecc71;
+  --color-lightgray: #ecf0f1;
+
+  /* Gray scale tokens (subset used in UI) */
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+
+  /* Blue ring focus color */
+  --color-blue-400: #60a5fa;
+}
+
+/* Custom global styles */
+body {
+  @apply bg-background text-secondary font-sans;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  @apply underline-offset-2;
+}
+
+/* Note: Keep @apply usage minimal (only tokens/utilities confirmed generated). 
+  For layout spacing resets use plain CSS to avoid unknown utility errors in v4 JIT. */

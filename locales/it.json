@@ -22,7 +22,8 @@
     "textPlaceholder": "Scrivi la tua risposta...",
     "cityPlaceholder": "Inizia a scrivere la tua città...",
     "textareaPlaceholder": "La tua opinione è importante...",
-    "otherPlaceholder": "Specifica la tua risposta"
+    "otherPlaceholder": "Specifica la tua risposta",
+    "rankItem": "Elemento classifica"
   },
   "questions": {
     "welcome": {

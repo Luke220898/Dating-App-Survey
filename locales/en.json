@@ -22,7 +22,8 @@
     "textPlaceholder": "Type your answer here...",
     "cityPlaceholder": "Start typing your city...",
     "textareaPlaceholder": "Your opinion is important...",
-    "otherPlaceholder": "Please specify your answer"
+    "otherPlaceholder": "Please specify your answer",
+    "rankItem": "Rank item"
   },
   "questions": {
     "welcome": {

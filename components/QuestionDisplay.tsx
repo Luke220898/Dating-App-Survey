@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Question, Answer, QuestionType } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -20,6 +20,8 @@ const DragHandleIcon: React.FC<{ className?: string }> = ({ className }) => (
     </svg>
 );
 
+// Removed arrow icons after switching to unified pointer-based drag and drop.
+
 
 const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, currentAnswer }) => {
     const { type, text, intro, options } = question;
@@ -27,7 +29,11 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
 
     // This state now holds the keys for the ranking question.
     const [ranking, setRanking] = useState<string[]>([]);
-    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null); // active item index
+    const draggedIndexRef = useRef<number | null>(null);
+    const listContainerRef = useRef<HTMLUListElement | null>(null);
+    const pointerIdRef = useRef<number | null>(null);
+    const pointerTypeRef = useRef<string | null>(null);
     const [otherValue, setOtherValue] = useState('');
     const [isOtherRadioSelected, setIsOtherRadioSelected] = useState(false);
 
@@ -91,35 +97,68 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
     }, [autocompleteWrapperRef]);
 
 
-    const handleDragStart = (e: React.DragEvent<HTMLLIElement>, index: number) => {
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', index.toString());
-        setTimeout(() => {
-            setDraggedIndex(index);
-        }, 0);
-    };
+    // Pointer-based drag logic (works for mouse + touch)
+    const reorder = useCallback((from: number, to: number) => {
+        setRanking(prev => {
+            if (from === to || from < 0 || to < 0 || from >= prev.length || to >= prev.length) return prev;
+            const next = [...prev];
+            const [m] = next.splice(from, 1);
+            next.splice(to, 0, m);
+            // Side-effect fuori dal ciclo di rendering sincrono: differiamo a microtask per evitare warning
+            Promise.resolve().then(() => onAnswer(next));
+            return next;
+        });
+    }, [onAnswer]);
 
-    const handleDrop = (e: React.DragEvent<HTMLLIElement>, targetIndex: number) => {
-        const sourceIndexStr = e.dataTransfer.getData('text/plain');
-        if (!sourceIndexStr) return; // Exit if no data transfer
-        const sourceIndex = parseInt(sourceIndexStr, 10);
-
-        setDraggedIndex(null); // Reset visual state immediately
-
-        if (isNaN(sourceIndex) || sourceIndex === targetIndex) {
-            return;
+    const detectIndexFromPointer = (clientY: number): number => {
+        if (!listContainerRef.current) return -1;
+        const items = Array.from(listContainerRef.current.querySelectorAll('li[data-idx]')) as HTMLLIElement[];
+        for (let i = 0; i < items.length; i++) {
+            const r = items[i].getBoundingClientRect();
+            if (clientY >= r.top && clientY <= r.bottom) return i;
         }
-
-        const newRanking = [...ranking];
-        const [draggedItem] = newRanking.splice(sourceIndex, 1);
-        newRanking.splice(targetIndex, 0, draggedItem);
-
-        setRanking(newRanking);
-        onAnswer(newRanking);
+        return items.length - 1;
     };
 
-    const handleDragEnd = () => {
+    const handlePointerMove = useCallback((e: PointerEvent) => {
+        if (pointerIdRef.current === null || draggedIndexRef.current === null) return;
+        if (pointerTypeRef.current === 'touch') {
+            // preveniamo lo scroll mentre si trascina su touch
+            e.preventDefault();
+        }
+        const from = draggedIndexRef.current;
+        const targetIndex = detectIndexFromPointer(e.clientY);
+        if (from !== null && targetIndex !== -1 && targetIndex !== from) {
+            reorder(from, targetIndex);
+            draggedIndexRef.current = targetIndex;
+            setDraggedIndex(targetIndex); // solo per trigger UI styling
+        }
+    }, [reorder]);
+
+    const handlePointerUp = useCallback((e: PointerEvent) => {
+        if (pointerIdRef.current !== null && e.pointerId !== pointerIdRef.current) return;
+        pointerIdRef.current = null;
+        pointerTypeRef.current = null;
+        draggedIndexRef.current = null;
         setDraggedIndex(null);
+        document.body.classList.remove('select-none');
+        window.removeEventListener('pointermove', handlePointerMove as any);
+        window.removeEventListener('pointerup', handlePointerUp as any);
+    }, [handlePointerMove]);
+
+    const startPointerDrag = (e: React.PointerEvent, index: number) => {
+        if (e.button !== 0) return; // solo tasto principale / touch
+        e.preventDefault();
+        pointerIdRef.current = e.pointerId;
+        pointerTypeRef.current = e.pointerType;
+        draggedIndexRef.current = index;
+        setDraggedIndex(index);
+        try {
+            (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+        } catch { /* noop in alcuni browser */ }
+        document.body.classList.add('select-none');
+        window.addEventListener('pointermove', handlePointerMove as any, { passive: false });
+        window.addEventListener('pointerup', handlePointerUp as any, { passive: true });
     };
 
     const renderInput = () => {
@@ -361,32 +400,72 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({ question, onAnswer, c
                 if (typeof options !== 'object' || Array.isArray(options)) return null;
                 const optionMap = options as Record<string, string>;
                 return (
-                    <ul className="list-none p-0 space-y-3">
+                    <ul className="list-none p-0 space-y-3" ref={listContainerRef}>
                         {ranking.map((itemKey, index) => {
                             const isBeingDragged = draggedIndex === index;
                             const itemText = optionMap[itemKey];
+                            const isActive = draggedIndex === index;
 
                             return (
                                 <li
                                     key={itemKey}
-                                    draggable
-                                    onDragStart={(e) => handleDragStart(e, index)}
-                                    onDrop={(e) => handleDrop(e, index)}
-                                    onDragEnd={handleDragEnd}
-                                    onDragOver={(e) => e.preventDefault()}
-                                    className="flex items-center gap-4"
+                                    data-idx={index}
+                                    className={`flex items-center gap-4 select-none`}
+                                    role="listitem"
                                 >
                                     <div className="flex-shrink-0 w-8 text-center">
                                         <span className="text-xl font-bold text-gray-400">{index + 1}</span>
                                     </div>
 
-                                    <div className={`flex-grow border rounded-lg cursor-grab ${isBeingDragged
-                                        ? 'bg-gray-300 border-2 border-dashed border-gray-400'
-                                        : 'bg-white hover:bg-gray-50 shadow-sm'
-                                        }`}>
-                                        <div className={`flex items-center justify-between p-4 h-[72px] ${isBeingDragged ? 'invisible' : ''}`}>
-                                            <span className="text-lg text-secondary flex-grow">{itemText}</span>
-                                            <DragHandleIcon className="w-6 h-6 text-gray-400 flex-shrink-0" />
+                                    <div
+                                        className={`flex-grow border rounded-xl transition-colors duration-150 relative ${isActive ? 'bg-gray-200 border-primary shadow-inner scale-[0.99] cursor-grabbing' : 'bg-white hover:bg-gray-50 shadow-sm active:scale-[0.995] cursor-grab'}`}
+                                        role="group"
+                                        aria-roledescription="draggable"
+                                        aria-grabbed={isActive}
+                                        aria-label={`${t('questionDisplay.rankItem') || 'Item'} ${index + 1}: ${itemText}`}
+                                        tabIndex={0}
+                                        onPointerDown={(e) => startPointerDrag(e, index)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === ' ' || e.key === 'Enter') {
+                                                if (draggedIndexRef.current === null) {
+                                                    draggedIndexRef.current = index;
+                                                    setDraggedIndex(index);
+                                                } else {
+                                                    draggedIndexRef.current = null;
+                                                    setDraggedIndex(null);
+                                                }
+                                                e.preventDefault();
+                                            } else if (draggedIndexRef.current !== null) {
+                                                if (e.key === 'ArrowUp') {
+                                                    e.preventDefault();
+                                                    const from = draggedIndexRef.current;
+                                                    const to = Math.max(0, from - 1);
+                                                    if (to !== from) {
+                                                        reorder(from, to);
+                                                        draggedIndexRef.current = to;
+                                                        setDraggedIndex(to);
+                                                    }
+                                                } else if (e.key === 'ArrowDown') {
+                                                    e.preventDefault();
+                                                    const from = draggedIndexRef.current;
+                                                    const to = Math.min(ranking.length - 1, from + 1);
+                                                    if (to !== from) {
+                                                        reorder(from, to);
+                                                        draggedIndexRef.current = to;
+                                                        setDraggedIndex(to);
+                                                    }
+                                                } else if (e.key === 'Escape') {
+                                                    draggedIndexRef.current = null;
+                                                    setDraggedIndex(null);
+                                                }
+                                            }
+                                        }}
+                                        style={{ touchAction: isActive ? 'none' as any : 'pan-y' }}
+                                    >
+                                        <div className={`flex items-start gap-3 p-4 md:p-5 min-h-[68px]`}>
+                                            <span className="text-base md:text-lg leading-snug text-secondary select-none w-full">
+                                                {itemText}
+                                            </span>
                                         </div>
                                     </div>
                                 </li>
